@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
 	private static final String validPassword   = "tata";
 
     // GUI elements
-	private EditText email      = null;
+	private EditText email       = null;
+	private EditText password      = null;
     private Button   signIn     = null;
 
 	@Override
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
 		// Link to GUI elements
         this.email      = findViewById(R.id.email);
+		this.password   = findViewById(R.id.psw);
         this.signIn     = findViewById(R.id.buttOk);
 
 		// Then program action associated to "Ok" button
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 			 * combination given is valid or not
 			 */
 			String mail = email.getText().toString();
-			String passwd = null; //TODO read password from EditText
+			String passwd = password.getText().toString(); //TODO read password from EditText
 			if (isValid(mail, passwd)) {
 				/* Ok, valid combination, do something or launch another activity...
 				 * The current activity could be finished, but it is not mandatory.
