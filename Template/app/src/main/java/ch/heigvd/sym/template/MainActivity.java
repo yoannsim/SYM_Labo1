@@ -25,6 +25,7 @@
  */
 package ch.heigvd.sym.template;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -83,6 +84,11 @@ public class MainActivity extends AppCompatActivity {
 				 * If you haven't anything more to do, you may finish()...
 				 * But just display a small message before quitting...
 				 */
+				Intent intent = new Intent(this, ch.heigvd.sym.template.MyActivity.class);
+				intent.putExtra("emailEntered", mail);
+				intent.putExtra("passwordGiven", passwd);
+				this.startActivity(intent);
+
 				Toast.makeText(MainActivity.this, getResources().getString(R.string.good), Toast.LENGTH_LONG).show();
 				finish();
 			} else {
