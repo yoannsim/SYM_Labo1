@@ -68,7 +68,10 @@ public class MainActivity extends AppCompatActivity {
 			 */
 			String mail = email.getText().toString();
 			String passwd = password.getText().toString(); //TODO read password from EditText
-			if (isValid(mail, passwd)) {
+			if (!mail.contains("@")){
+				Toast.makeText(MainActivity.this, "Il est nécessaire de mettre un email valide", Toast.LENGTH_SHORT).show();
+			}
+			else if (isValid(mail, passwd)) {
 				/* Ok, valid combination, do something or launch another activity...
 				 * The current activity could be finished, but it is not mandatory.
 				 * To launch activity MyActivity.class, try something like :
@@ -93,6 +96,11 @@ public class MainActivity extends AppCompatActivity {
 				finish();
 			} else {
 				// Wrong combination, display pop-up dialog and stay on login screen
+				email.setText("");
+				password.setText("");
+				/*
+				!!!!!!!!!!!!! Utiliser un DialogBuilder ! ("Utilisateur ou mot de passe inconnu" ->  res/values/strings.xml)
+				*/
 				showErrorDialog(mail, passwd);
 			}
 		});
