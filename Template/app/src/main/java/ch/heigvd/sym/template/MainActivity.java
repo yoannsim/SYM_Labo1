@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
 			String mail = email.getText().toString();
 			String passwd = password.getText().toString(); //TODO read password from EditText
 			if (!mail.contains("@")){
+				// !!!!!!!!! "Il est nécessaire de mettre un email valide" ->  res/values/strings.xml)
 				Toast.makeText(MainActivity.this, "Il est nécessaire de mettre un email valide", Toast.LENGTH_SHORT).show();
 			}
 			else if (isValid(mail, passwd)) {
