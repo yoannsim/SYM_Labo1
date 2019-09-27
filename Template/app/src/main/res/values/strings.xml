@@ -6,7 +6,8 @@
     <string name="psw">Password</string>
     <string name="signin">Sign in</string>
     <string name="wronglogin">Login failed</string>
-    <string name="wrong">Email or Password not recognized</string>
+    <string name="wrong">Email or Password not recognized !</string>
     <string name="good">Valid login, welcome !</string>
+    <string name="wrongEmail">Il est nécessaire de mettre un email valide</string>
     
 </resources>
