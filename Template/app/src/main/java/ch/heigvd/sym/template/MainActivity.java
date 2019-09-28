@@ -99,40 +99,8 @@ public class MainActivity extends AppCompatActivity {
 				Intent intent = new Intent(this, ch.heigvd.sym.template.MyActivity.class);
 				intent.putExtra("emailEntered", mail);
 				intent.putExtra("passwordGiven", passwd);
-				//this.startActivity(intent);
+				this.startActivity(intent);
 
-				TelephonyManager telephonyManager;
-				telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-
-
-				if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-					// Permission is not granted
-					// Should we show an explanation?
-					if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-							Manifest.permission.READ_PHONE_STATE)) {
-						// Show an explanation to the user *asynchronously* -- don't block
-						// this thread waiting for the user's response! After the user
-						// sees the explanation, try again to request the permission.
-						Toast.makeText(MainActivity.this, "OK" , Toast.LENGTH_LONG).show();
-
-						return;
-					} else {
-						// No explanation needed; request the permission
-						ActivityCompat.requestPermissions(this,
-								new String[]{Manifest.permission.READ_PHONE_STATE},2);
-
-						// MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-						// app-defined int constant. The callback method gets the
-						// result of the request.
-						Toast.makeText(MainActivity.this, "Pas ok", Toast.LENGTH_LONG).show();
-
-						return;
-					}
-				}
-				String IMEI_Number_Holder = telephonyManager.getDeviceId();
-
-				Toast.makeText(MainActivity.this, getResources().getString(R.string.good) + " " + IMEI_Number_Holder, Toast.LENGTH_LONG).show();
-				//finish();
 			} else {
 				// Wrong combination, display pop-up dialog and stay on login screen
 				email.setText("");
