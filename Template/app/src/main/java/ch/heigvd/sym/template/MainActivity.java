@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 		 * Pop-up dialog to show error
 		 */
 		AlertDialog.Builder alertbd = new AlertDialog.Builder(this);
-        alertbd.setIcon(android.R.drawable.ic_dialog_alert);
+        alertbd.setIcon(R.mipmap.error_log);
 		alertbd.setTitle(R.string.wronglogin);
 	    alertbd.setMessage(R.string.wrong);
 	    alertbd.setPositiveButton(android.R.string.ok, (dialog, which) -> {
