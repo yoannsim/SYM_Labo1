@@ -31,6 +31,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -39,13 +41,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.os.Environment;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
 
 
 public class MyActivity extends AppCompatActivity {
@@ -68,6 +74,7 @@ public class MyActivity extends AppCompatActivity {
         // GUI elements
         this.email = findViewById(R.id.textMail);
         this.eimi = findViewById(R.id.textIMEI);
+        ImageView img = findViewById(R.id.img);
         String mail = "";
         if (intent.hasExtra("emailEntered")) { // vérifie qu'une valeur est associée à la clé “edittext”
             mail = intent.getStringExtra("emailEntered"); // on récupère la valeur associée à la clé
@@ -104,5 +111,17 @@ public class MyActivity extends AppCompatActivity {
 
         eimi.setText("IMEI Number : "+IMEI_Number_Holder);
 
+
+
+        // "/sdcard/Download/perso.jpg"   -   /storage/emulated/0/Download (getExternalStoragePublicDirectory)
+        File dcimDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File imgFile = new  File(dcimDir+"perso.jpg");
+
+        if(imgFile.exists()){
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            img.setImageBitmap(myBitmap);
+        } else {
+
+        }
     }
 }
