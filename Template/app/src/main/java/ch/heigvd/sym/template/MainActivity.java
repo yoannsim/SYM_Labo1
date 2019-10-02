@@ -109,6 +109,37 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 	}
+
+	protected void onStart () {
+		super.onStart();
+		Log.w(TAG, "START !!");
+	}
+
+	protected void onRestart () {
+		super.onRestart();
+		Log.w(TAG, "RESTART !!");
+	}
+
+	protected void onResume () {
+		super.onResume();
+		Log.w(TAG, "RESUME !!");
+	}
+
+	protected void onPause () {
+		super.onPause();
+		Log.w(TAG, "PAUSE !!");
+	}
+
+	protected void onStop () {
+		super.onStop();
+		Log.w(TAG, "STOP !!");
+	}
+
+	protected void onDestroy () {
+		super.onDestroy();
+		Log.w(TAG, "DESTROY !!");
+	}
+
 	
 	private boolean isValid(String mail, String passwd) {
         if(mail == null || passwd == null) {

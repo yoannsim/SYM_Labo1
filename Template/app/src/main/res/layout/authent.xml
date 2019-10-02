@@ -8,12 +8,11 @@
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/psw"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:autofillHints=""
         android:hint="@string/email"
         android:inputType="textEmailAddress">
 
@@ -24,12 +23,13 @@
         android:id="@+id/psw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/buttOk"
+        android:layout_below="@+id/email"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="37dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="-2dp"
+        android:autofillHints=""
         android:hint="@string/psw"
         android:inputType="textPassword">
 
@@ -40,12 +40,12 @@
         android:id="@+id/buttOk"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/psw"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="525dp"
+        android:layout_marginStart="-1dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="1dp"
         android:text="@string/signin" />
 
 </RelativeLayout>
