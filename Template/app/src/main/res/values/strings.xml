@@ -9,5 +9,6 @@
     <string name="wrong">Email or Password not recognized !</string>
     <string name="good">Valid login, welcome !</string>
     <string name="wrongEmail">Il est nécessaire de mettre un email valide</string>
+    <string name="notPermissionIMEI">Pas de permission</string>
     
 </resources>

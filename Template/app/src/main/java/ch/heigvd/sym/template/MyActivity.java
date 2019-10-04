@@ -56,11 +56,12 @@ import java.io.File;
 
 public class MyActivity extends AppCompatActivity {
 
+    private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 2;
+    private boolean accepte_read_phone_state = false;
     private TextView email = null;
     private TextView eimi = null;
     String IMEI_Number_Holder = "";
     TelephonyManager telephonyManager;
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -84,7 +85,6 @@ public class MyActivity extends AppCompatActivity {
 
         telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
-
         if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
             // Should we show an explanation?
@@ -93,35 +93,65 @@ public class MyActivity extends AppCompatActivity {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
-                Toast.makeText(MyActivity.this, "pas OK" , Toast.LENGTH_LONG).show();
 
             } else {
                 // No explanation needed; request the permission
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_PHONE_STATE},2);
+                        new String[]{Manifest.permission.READ_PHONE_STATE}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
 
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
                 // result of the request.
-                Toast.makeText(MyActivity.this, "OK" , Toast.LENGTH_LONG).show();
+                // Si il a accepté la permission
+                if (accepte_read_phone_state){
+                    IMEI_Number_Holder = telephonyManager.getImei();
+                }
             }
-        }else {
-            IMEI_Number_Holder =  telephonyManager.getImei();
+        } else {
+            IMEI_Number_Holder = telephonyManager.getImei();
         }
 
-        eimi.setText("IMEI Number : "+IMEI_Number_Holder);
 
+
+        eimi.setText("IMEI Number : " + IMEI_Number_Holder);
 
 
         // "/sdcard/Download/perso.jpg"   -   /storage/emulated/0/Download (getExternalStoragePublicDirectory)
+        // Carte mémoire/Download/perso.jpg
         File dcimDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File imgFile = new  File(dcimDir+"perso.jpg");
+        File imgFile = new File("/perso.jpg"); // dcimDir+"/perso.jpg"
 
-        if(imgFile.exists()){
+        if (imgFile.exists()) {
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             img.setImageBitmap(myBitmap);
         } else {
+            //img.setImageBitmap(R.drawable.index);
+        }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    accepte_read_phone_state = true;
+
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    IMEI_Number_Holder = getResources().getString(R.string.notPermissionIMEI);
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
         }
     }
 }
