@@ -5,6 +5,9 @@
  * 			  Fabien Dutoit 23 juillet 2019
  *            IICT / HEIG-VD
  *
+ * Modifié : Spinelli Isaia 04 octobre 2019
+* 			 Simonet Yoann 04 octobre 2019
+ *
  * mailto:fabien.dutoit@heig-vd.ch
  *
  * This piece of code reads a [email_account / password ] combination.
@@ -26,7 +29,6 @@
 package ch.heigvd.sym.template;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -37,7 +39,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
 	// For logging purposes
 	private static final String TAG = MainActivity.class.getSimpleName();
+	// Codes constants pour les permissions
+	private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 2;
+	private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 3;
 
 	// Just for test purposes : please destroy !
 	private static final String validEmail = "toto@tutu.com";
@@ -61,9 +65,11 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.w(TAG, "CREATE !!");
 		// Show the welcome screen / login authentication dialog
 		setContentView(R.layout.authent);
 
+		Log.w(TAG, "CREATE !!");
 		// Link to GUI elements
 		this.email = findViewById(R.id.email);
 		this.password = findViewById(R.id.psw);
@@ -71,31 +77,14 @@ public class MainActivity extends AppCompatActivity {
 
 		// Then program action associated to "Ok" button
 		signIn.setOnClickListener((v) -> {
-
-			/*
-			 * There you have to check out if the email/password
-			 * combination given is valid or not
-			 */
+			// get mail and password
 			String mail = email.getText().toString();
-			String passwd = password.getText().toString(); //TODO read password from EditText
+			String passwd = password.getText().toString();
+			// check email
 			if (!mail.contains("@")) {
 				Toast.makeText(MainActivity.this, R.string.wrongEmail, Toast.LENGTH_SHORT).show();
 			} else if (isValid(mail, passwd)) {
-				/* Ok, valid combination, do something or launch another activity...
-				 * The current activity could be finished, but it is not mandatory.
-				 * To launch activity MyActivity.class, try something like :
-				 *
-				 * 			Intent intent = new Intent(this, ch.heigvd.sym.MyActivity.class);
-				 * 			intent.putExtra("emailEntered", mail);
-				 *			intent.putExtra("passwordGiven", passwd);
-				 *			this.startActivity(intent);
-				 *
-				 * Alternately, you could also startActivityForResult if you are awaiting a result.
-				 * In the latter case, you have to indicate an int parameter to identify MyActivity
-				 *
-				 * If you haven't anything more to do, you may finish()...
-				 * But just display a small message before quitting...
-				 */
+				// lance la 2eme activite si c'est valide
 				Intent intent = new Intent(this, ch.heigvd.sym.template.MyActivity.class);
 				intent.putExtra("emailEntered", mail);
 				intent.putExtra("passwordGiven", passwd);
@@ -110,9 +99,107 @@ public class MainActivity extends AppCompatActivity {
 		});
 	}
 
+	@RequiresApi(api = Build.VERSION_CODES.M)
 	protected void onStart () {
 		super.onStart();
 		Log.w(TAG, "START !!");
+
+		// Demande les autorisations au lancement de l'app
+
+		// Si il a deja accepte
+		if (!checkPermReadState()) {
+			// Demande l'autorisation pour lire le stockage externe
+			checkPermExternStorage();
+		}
+	}
+
+	// Handler des reponses aux autorisations
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	@Override
+	public void onRequestPermissionsResult(int requestCode,
+										   String[] permissions, int[] grantResults) {
+		switch (requestCode) {
+			case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
+				// If request is cancelled, the result arrays are empty.
+				if (grantResults.length > 0
+						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					// permission was granted, yay!
+
+					// Demande l'autorisation pour lire le stockage externe
+					Log.w(TAG, "DEMANDE 2 !!");
+					checkPermExternStorage();
+
+
+				} else {
+					// permission denied, boo!
+					finish();
+				}
+				return;
+			}
+			case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+				if (grantResults.length > 0
+						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					// permission was granted, yay!
+					Log.w(TAG, "PERMISSION !!");
+
+				} else {
+					// permission denied, boo!
+					finish();
+				}
+				return;
+			}
+
+		}
+	}
+
+	// demande la permission pour la lecture du stockage externe
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	private void checkPermExternStorage(){
+		if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+			// Permission is not granted
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+					Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+				//This is called if user has denied the permission before
+				//In this case I am just asking the permission again
+				Log.w(TAG, "demande 123 !!");
+				ActivityCompat.requestPermissions(this,
+						new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+			} else {
+				// No explanation needed; request the permission
+				Log.w(TAG, "demande 321 !!");
+				ActivityCompat.requestPermissions(this,
+						new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+			}
+		}
+	}
+
+	// demande la permission pour la lecture de l'IMEI
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	private boolean checkPermReadState(){
+		// Demande l'autorisation pour lire l'IMEI
+		if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+			// Permission is not granted
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+					Manifest.permission.READ_PHONE_STATE)) {
+
+				//This is called if user has denied the permission before
+				//In this case I am just asking the permission again
+				ActivityCompat.requestPermissions(this,
+						new String[]{Manifest.permission.READ_PHONE_STATE}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+
+			} else {
+				// No explanation needed; request the permission
+				ActivityCompat.requestPermissions(this,
+						new String[]{Manifest.permission.READ_PHONE_STATE}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	protected void onRestart () {
