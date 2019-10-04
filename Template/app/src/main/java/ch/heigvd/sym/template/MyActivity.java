@@ -60,6 +60,11 @@ public class MyActivity extends AppCompatActivity {
         if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+        // on a forcement les droits si l'application est encore ouverte
+        // (Demande pour la compilation)
+        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         IMEI_Number_Holder = telephonyManager.getImei();
 
         eimi.setText("IMEI Number : " + IMEI_Number_Holder);
@@ -75,6 +80,10 @@ public class MyActivity extends AppCompatActivity {
         if (imgFile.exists()) {
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             img.setImageBitmap(myBitmap);
+        }
+        else{
+            //si non on affiche une image par defaut
+            img.setImageResource(R.drawable.index);
         }
     }
 
