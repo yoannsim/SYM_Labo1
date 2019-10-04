@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
 	// For logging purposes
 	private static final String TAG = MainActivity.class.getSimpleName();
 
+	private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 2;
+	private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 3;
+
 	// Just for test purposes : please destroy !
 	private static final String validEmail = "toto@tutu.com";
 	private static final String validPassword = "tata";
@@ -61,9 +64,11 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.w(TAG, "CREATE !!");
 		// Show the welcome screen / login authentication dialog
 		setContentView(R.layout.authent);
 
+		Log.w(TAG, "CREATE !!");
 		// Link to GUI elements
 		this.email = findViewById(R.id.email);
 		this.password = findViewById(R.id.psw);
@@ -110,9 +115,111 @@ public class MainActivity extends AppCompatActivity {
 		});
 	}
 
+	@RequiresApi(api = Build.VERSION_CODES.M)
 	protected void onStart () {
 		super.onStart();
 		Log.w(TAG, "START !!");
+
+		// Demande les autorisations
+
+		// Si il a deja accepte
+		if (!checkPermReadState()) {
+			// Demande l'autorisation pour lire le stockage externe
+			checkPermExternStorage();
+		}
+
+
+
+
+
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	@Override
+	public void onRequestPermissionsResult(int requestCode,
+										   String[] permissions, int[] grantResults) {
+		switch (requestCode) {
+			case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
+				// If request is cancelled, the result arrays are empty.
+				if (grantResults.length > 0
+						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					// permission was granted, yay!
+
+					// Demande l'autorisation pour lire le stockage externe
+					Log.w(TAG, "DEMANDE 2 !!");
+					checkPermExternStorage();
+
+
+				} else {
+					// permission denied, boo!
+					finish();
+				}
+				return;
+			}
+			case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+				if (grantResults.length > 0
+						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					// permission was granted, yay!
+					Log.w(TAG, "PERMISSION !!");
+
+				} else {
+					// permission denied, boo!
+					finish();
+				}
+				return;
+			}
+
+		}
+	}
+
+	// demande la permission pour la lecture du stockage externe
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	private void checkPermExternStorage(){
+		if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+			// Permission is not granted
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+					Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+				//This is called if user has denied the permission before
+				//In this case I am just asking the permission again
+				Log.w(TAG, "demande 123 !!");
+				ActivityCompat.requestPermissions(this,
+						new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+			} else {
+				// No explanation needed; request the permission
+				Log.w(TAG, "demande 321 !!");
+				ActivityCompat.requestPermissions(this,
+						new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+			}
+		}
+	}
+
+	// demande la permission pour la lecture de l'IMEI
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	private boolean checkPermReadState(){
+		// Demande l'autorisation pour lire l'IMEI
+		if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+			// Permission is not granted
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+					Manifest.permission.READ_PHONE_STATE)) {
+
+				//This is called if user has denied the permission before
+				//In this case I am just asking the permission again
+				ActivityCompat.requestPermissions(this,
+						new String[]{Manifest.permission.READ_PHONE_STATE}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+
+			} else {
+				// No explanation needed; request the permission
+				ActivityCompat.requestPermissions(this,
+						new String[]{Manifest.permission.READ_PHONE_STATE}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	protected void onRestart () {

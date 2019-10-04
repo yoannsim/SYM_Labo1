@@ -56,8 +56,6 @@ import java.io.File;
 
 public class MyActivity extends AppCompatActivity {
 
-    private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 2;
-    private boolean accepte_read_phone_state = false;
     private TextView email = null;
     private TextView eimi = null;
     String IMEI_Number_Holder = "";
@@ -85,33 +83,12 @@ public class MyActivity extends AppCompatActivity {
 
         telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
+        // on a forcement les droits si l'application est encore ouverte
+        // (Demande pour la compilation)
         if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_PHONE_STATE)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-                // No explanation needed; request the permission
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_PHONE_STATE}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-                // Si il a accepté la permission
-                if (accepte_read_phone_state){
-                    IMEI_Number_Holder = telephonyManager.getImei();
-                }
-            }
-        } else {
-            IMEI_Number_Holder = telephonyManager.getImei();
+            return;
         }
-
-
+        IMEI_Number_Holder = telephonyManager.getImei();
 
         eimi.setText("IMEI Number : " + IMEI_Number_Holder);
 
@@ -129,29 +106,5 @@ public class MyActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    accepte_read_phone_state = true;
 
-
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    IMEI_Number_Holder = getResources().getString(R.string.notPermissionIMEI);
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request.
-        }
-    }
 }
