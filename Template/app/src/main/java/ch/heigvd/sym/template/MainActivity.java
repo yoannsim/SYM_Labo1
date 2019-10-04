@@ -5,6 +5,9 @@
  * 			  Fabien Dutoit 23 juillet 2019
  *            IICT / HEIG-VD
  *
+ * Modifié : Spinelli Isaia 04 octobre 2019
+* 			 Simonet Yoann 04 octobre 2019
+ *
  * mailto:fabien.dutoit@heig-vd.ch
  *
  * This piece of code reads a [email_account / password ] combination.
